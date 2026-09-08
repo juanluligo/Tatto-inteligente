@@ -4,6 +4,7 @@ const DESIGNS_KEY = 'disenos';
 const initialClients = [
   { id: 'cliente-001', nombre: 'Juan Camilo', email: 'juan@gmail.com', telefono: '3001234567', estado: 'activo' },
   { id: 'cliente-002', nombre: 'María López', email: 'maria@gmail.com', telefono: '3159876543', estado: 'activo' },
+  { id: 'cliente-003', nombre: 'Irving Magico', email: 'irving@gmail.com', telefono: '3207904948', estado: 'activo' },
 ];
 
 function read(key, fallback) {
@@ -30,4 +31,8 @@ export function createDesign({ clienteId, nombre, categoria, descripcion, imagen
   const designs = read(DESIGNS_KEY, []);
   localStorage.setItem(DESIGNS_KEY, JSON.stringify([...designs, design]));
   return design;
+}
+
+export function getDesignsByClient(clienteId) {
+  return read(DESIGNS_KEY, []).filter((design) => design.clienteId === clienteId);
 }

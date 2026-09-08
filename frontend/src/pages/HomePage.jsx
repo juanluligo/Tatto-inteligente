@@ -1,5 +1,5 @@
 import { STUDIO_NAME } from '../constants/app.js';
-import CreateDesignForm from '../features/designs/components/CreateDesignForm.jsx';
+import DesignsStudioSection from '../features/designs/components/DesignsStudioSection.jsx';
 
 export default function HomePage() {
   return (
@@ -21,7 +21,7 @@ export default function HomePage() {
         </div>
       </section>
       <section className="studio-section" id="estudio">
-        <CreateDesignForm />
+        <DesignsStudioSection />
       </section>
       <section className="intro-grid" id="proceso">
         <p className="section-number">01 / 03</p>

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { createDesign, getClients } from './designStorage.js';
+import { createDesign, getClients, getDesignsByClient } from './designStorage.js';
 
 function createMemoryStorage() {
   const values = new Map();
@@ -30,5 +30,16 @@ describe('design storage', () => {
       estado: 'activo',
     });
     expect(JSON.parse(localStorage.getItem('disenos'))).toContainEqual(design);
+  });
+
+  it('returns only the designs that belong to the requested client', () => {
+    localStorage.setItem('disenos', JSON.stringify([
+      { id: 'diseno-001', clienteId: 'cliente-001', nombre: 'Dragón' },
+      { id: 'diseno-002', clienteId: 'cliente-002', nombre: 'Rosa' },
+    ]));
+
+    expect(getDesignsByClient('cliente-001')).toEqual([
+      { id: 'diseno-001', clienteId: 'cliente-001', nombre: 'Dragón' },
+    ]);
   });
 });
