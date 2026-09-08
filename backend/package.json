@@ -1,0 +1,14 @@
+{
+  "name": "tattoostudio-backend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "dependencies": { "cors": "latest", "dotenv": "latest", "express": "latest" },
+  "devDependencies": { "@eslint/js": "latest", "eslint": "latest", "globals": "latest", "supertest": "latest", "vitest": "latest" }
+}
