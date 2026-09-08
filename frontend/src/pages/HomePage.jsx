@@ -1,9 +1,11 @@
 import { STUDIO_NAME } from '../constants/app.js';
+import StudioGallery from '../components/StudioGallery.jsx';
+import DesignsStudioSection from '../features/designs/components/DesignsStudioSection.jsx';
 
 export default function HomePage() {
   return (
     <>
-      <section className="hero" id="estudio">
+      <section className="hero" id="inicio">
         <div className="hero-copy">
           <p className="eyebrow">Estudio privado · Bogotá</p>
           <h1>Historias que se llevan en la piel.</h1>
@@ -13,12 +15,24 @@ export default function HomePage() {
           <a className="primary-button" href="#contacto">Cuéntanos tu idea <span>↗</span></a>
         </div>
         <div className="hero-art" aria-label="Composición artística de tinta" role="img">
+          <div className="neural-network" aria-hidden="true">
+            <span className="network-line network-line-one" />
+            <span className="network-line network-line-two" />
+            <span className="network-line network-line-three" />
+            <span className="network-node network-node-one" />
+            <span className="network-node network-node-two" />
+            <span className="network-node network-node-three" />
+          </div>
           <div className="ink-orbit orbit-one" />
           <div className="ink-orbit orbit-two" />
           <div className="ink-flower">✳</div>
           <span className="art-note">SINCE<br />2025</span>
         </div>
       </section>
+      <section className="studio-section" id="estudio">
+        <DesignsStudioSection />
+      </section>
+      <StudioGallery />
       <section className="intro-grid" id="proceso">
         <p className="section-number">01 / 03</p>
         <div>
