@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage.jsx';
 import {
   actualizarCliente,
   crearCliente,
+  eliminarCliente,
   listarClientes,
   obtenerClientePorId,
 } from './services/clientes.js';
@@ -35,6 +36,14 @@ export default function App() {
     return updatedClient;
   }
 
+  async function handleDeleteClient(id) {
+    const inactiveClient = await eliminarCliente(id, clientes);
+    setClientes((current) => current.map((client) => (
+      client.id === id ? inactiveClient : client
+    )));
+    return inactiveClient;
+  }
+
   return (
     <AppLayout onScheduleClick={() => setIsRegistrationOpen(true)}>
       <HomePage />
@@ -42,6 +51,7 @@ export default function App() {
         isOpen={isRegistrationOpen}
         onClose={() => setIsRegistrationOpen(false)}
         onCreate={handleCreateClient}
+        onDeleteClient={handleDeleteClient}
         onGetClient={handleGetClient}
         onListClients={handleListClients}
         onUpdateClient={handleUpdateClient}

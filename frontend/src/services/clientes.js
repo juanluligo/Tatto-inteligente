@@ -59,6 +59,19 @@ export async function actualizarCliente(id, datos, clientesExistentes = []) {
   };
 }
 
+/** Simula la eliminación lógica de un cliente en la API. */
+export async function eliminarCliente(id, clientesExistentes = []) {
+  const existingClient = clientesExistentes.find((cliente) => cliente.id === id);
+  if (!existingClient) throw new Error('Cliente no encontrado.');
+
+  await Promise.resolve();
+
+  return {
+    ...existingClient,
+    estado: false,
+  };
+}
+
 /** Simula la consulta de clientes en la API. */
 export async function listarClientes(clientes = []) {
   await Promise.resolve();

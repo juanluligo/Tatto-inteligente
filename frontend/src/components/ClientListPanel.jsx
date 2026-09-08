@@ -1,12 +1,18 @@
 import { useEffect, useMemo, useState } from 'react';
 import ClientEditForm from './ClientEditForm.jsx';
+import DeleteClientDialog from './DeleteClientDialog.jsx';
 
 function formatDate(value, options) {
   if (!value) return 'No registrada';
   return new Intl.DateTimeFormat('es-CO', options).format(new Date(value));
 }
 
-export default function ClientListPanel({ onGetClient, onListClients, onUpdateClient }) {
+export default function ClientListPanel({
+  onDeleteClient,
+  onGetClient,
+  onListClients,
+  onUpdateClient,
+}) {
   const [clientes, setClientes] = useState([]);
   const [search, setSearch] = useState('');
   const [selectedClient, setSelectedClient] = useState(null);
@@ -14,6 +20,8 @@ export default function ClientListPanel({ onGetClient, onListClients, onUpdateCl
   const [error, setError] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [success, setSuccess] = useState('');
+  const [clientPendingDeletion, setClientPendingDeletion] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     let isCurrent = true;
@@ -69,9 +77,39 @@ export default function ClientListPanel({ onGetClient, onListClients, onUpdateCl
     setSuccess('Cliente actualizado correctamente.');
   }
 
+  async function handleDeleteClient() {
+    if (!clientPendingDeletion) return;
+
+    setIsDeleting(true);
+    setError('');
+
+    try {
+      const inactiveClient = await onDeleteClient(clientPendingDeletion.id);
+      setSelectedClient(inactiveClient);
+      setClientes((current) => current.map((client) => (
+        client.id === inactiveClient.id ? inactiveClient : client
+      )));
+      setClientPendingDeletion(null);
+      setSuccess('Cliente marcado como inactivo correctamente.');
+    } catch {
+      setError('No fue posible eliminar el cliente. Inténtalo de nuevo.');
+      setClientPendingDeletion(null);
+    } finally {
+      setIsDeleting(false);
+    }
+  }
+
   if (selectedClient) {
     return (
       <section className="client-panel" aria-labelledby="client-detail-title">
+        {clientPendingDeletion && (
+          <DeleteClientDialog
+            clientName={clientPendingDeletion.nombre}
+            isDeleting={isDeleting}
+            onCancel={() => setClientPendingDeletion(null)}
+            onConfirm={handleDeleteClient}
+          />
+        )}
         {!isEditing && <button className="back-button" type="button" onClick={() => setSelectedClient(null)}>← Volver a clientes</button>}
         {isEditing && <button className="back-button" type="button" onClick={() => setIsEditing(false)}>← Cancelar edición</button>}
         {isEditing && <>
@@ -104,7 +142,17 @@ export default function ClientListPanel({ onGetClient, onListClients, onUpdateCl
           </div>
         </dl>
         {success && <p className="form-success" role="status">{success}</p>}
-        <button className="primary-button edit-button" type="button" onClick={() => setIsEditing(true)}>Editar cliente <span>→</span></button>
+        {error && <p className="form-error form-error-general" role="alert">{error}</p>}
+        <div className="detail-actions">
+          <button className="primary-button edit-button" type="button" onClick={() => setIsEditing(true)}>
+            Editar cliente <span>→</span>
+          </button>
+          {selectedClient.estado && (
+            <button className="danger-button" type="button" onClick={() => setClientPendingDeletion(selectedClient)}>
+              Eliminar
+            </button>
+          )}
+        </div>
         </>}
       </section>
     );

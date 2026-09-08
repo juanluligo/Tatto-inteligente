@@ -7,6 +7,7 @@ export default function ClientRegistrationModal({
   isOpen,
   onClose,
   onCreate,
+  onDeleteClient,
   onGetClient,
   onListClients,
   onUpdateClient,
@@ -82,6 +83,7 @@ export default function ClientRegistrationModal({
             onGetClient={onGetClient}
             onListClients={onListClients}
             onUpdateClient={onUpdateClient}
+            onDeleteClient={onDeleteClient}
           />
         )}
         {activeView === 'registro' && <>
