@@ -1,6 +1,6 @@
 import { getDesignsByClient } from '../services/designStorage.js';
 
-export default function DesignsList({ clientId, onEdit }) {
+export default function DesignsList({ clientId, onEdit, onDelete }) {
   const designs = getDesignsByClient(clientId);
 
   return (
@@ -35,9 +35,22 @@ export default function DesignsList({ clientId, onEdit }) {
                 <p className="design-category">{design.categoria}</p>
                 <h4>{design.nombre}</h4>
                 <p>{design.descripcion}</p>
-                <button className="edit-design-button" type="button" onClick={() => onEdit(design)}>
-                  Editar diseño ↗
-                </button>
+                <div className="design-card-actions">
+                  <button
+                    className="edit-design-button"
+                    type="button"
+                    onClick={() => onEdit(design)}
+                  >
+                    Editar diseño ↗
+                  </button>
+                  <button
+                    className="delete-design-button"
+                    type="button"
+                    onClick={() => onDelete(design)}
+                  >
+                    Eliminar
+                  </button>
+                </div>
               </div>
             </article>
           ))}

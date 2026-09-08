@@ -427,6 +427,26 @@ h2 {
   padding: 0 0 4px;
 }
 
+.design-card-actions {
+  align-items: center;
+  display: flex;
+  gap: 18px;
+}
+
+.delete-design-button {
+  background: transparent;
+  border: 0;
+  color: #9b7068;
+  cursor: pointer;
+  font: 10px 'DM Mono', monospace;
+  margin-top: 18px;
+  padding: 0 0 4px;
+}
+
+.delete-design-button:hover {
+  color: #e5a096;
+}
+
 .modal-backdrop {
   align-items: center;
   background: rgb(0 0 0 / 75%);
