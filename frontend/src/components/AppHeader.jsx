@@ -7,7 +7,7 @@ export default function AppHeader() {
       </a>
       <nav aria-label="Navegación principal">
         <a href="#estudio">El estudio</a>
-        <a href="#proceso">Proceso</a>
+        <a href="#proceso">Usuario</a>
         <a className="nav-cta" href="#contacto">Agenda una cita</a>
       </nav>
     </header>
