@@ -1,4 +1,48 @@
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const CLIENTS_STORAGE_KEY = 'clientes';
+
+const defaultClients = [
+  {
+    id: 'cliente-001',
+    nombre: 'Juan Camilo',
+    email: 'juan@gmail.com',
+    telefono: '3001234567',
+    fechaNacimiento: '2007-06-15',
+    estado: true,
+  },
+  {
+    id: 'cliente-002',
+    nombre: 'María López',
+    email: 'maria@gmail.com',
+    telefono: '3159876543',
+    fechaNacimiento: '2005-03-10',
+    estado: true,
+  },
+  {
+    id: 'cliente-003',
+    nombre: 'Irving Magico',
+    email: 'irving@gmail.com',
+    telefono: '3207904948',
+    fechaNacimiento: null,
+    estado: true,
+  },
+];
+
+export function leerClientes() {
+  if (typeof localStorage === 'undefined') return [];
+
+  const storedClients = localStorage.getItem(CLIENTS_STORAGE_KEY);
+  if (storedClients) return JSON.parse(storedClients);
+
+  guardarClientes(defaultClients);
+  return defaultClients;
+}
+
+export function guardarClientes(clientes) {
+  if (typeof localStorage !== 'undefined') {
+    localStorage.setItem(CLIENTS_STORAGE_KEY, JSON.stringify(clientes));
+  }
+}
 
 function createValidationError(errors) {
   const error = new Error('Revisa los datos del formulario.');
@@ -82,4 +126,16 @@ export async function listarClientes(clientes = []) {
 export async function obtenerClientePorId(id, clientes = []) {
   await Promise.resolve();
   return clientes.find((cliente) => cliente.id === id) || null;
+}
+
+export function authenticateClient(datos, clientes = leerClientes()) {
+  const email = datos.email.trim().toLowerCase();
+  const telefono = datos.telefono.trim();
+
+  return clientes.find((cliente) => (
+    cliente.estado !== false
+    && cliente.estado !== 'inactivo'
+    && cliente.email.toLowerCase() === email
+    && cliente.telefono === telefono
+  )) || null;
 }
