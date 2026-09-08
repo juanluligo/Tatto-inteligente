@@ -36,3 +36,24 @@ export function createDesign({ clienteId, nombre, categoria, descripcion, imagen
 export function getDesignsByClient(clienteId) {
   return read(DESIGNS_KEY, []).filter((design) => design.clienteId === clienteId);
 }
+
+export function updateDesign(id, changes) {
+  const designs = read(DESIGNS_KEY, []);
+  const currentDesign = designs.find((design) => design.id === id);
+
+  if (!currentDesign) return null;
+
+  const updatedDesign = {
+    ...currentDesign,
+    ...changes,
+    id: currentDesign.id,
+    clienteId: currentDesign.clienteId,
+    estado: currentDesign.estado,
+  };
+  const updatedDesigns = designs.map((design) => (
+    design.id === id ? updatedDesign : design
+  ));
+
+  localStorage.setItem(DESIGNS_KEY, JSON.stringify(updatedDesigns));
+  return updatedDesign;
+}

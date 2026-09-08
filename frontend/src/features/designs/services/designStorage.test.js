@@ -1,5 +1,10 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { createDesign, getClients, getDesignsByClient } from './designStorage.js';
+import {
+  createDesign,
+  getClients,
+  getDesignsByClient,
+  updateDesign,
+} from './designStorage.js';
 
 function createMemoryStorage() {
   const values = new Map();
@@ -41,5 +46,32 @@ describe('design storage', () => {
     expect(getDesignsByClient('cliente-001')).toEqual([
       { id: 'diseno-001', clienteId: 'cliente-001', nombre: 'Dragón' },
     ]);
+  });
+
+  it('updates a design without changing its identity or owner', () => {
+    localStorage.setItem('disenos', JSON.stringify([
+      {
+        id: 'diseno-001',
+        clienteId: 'cliente-001',
+        nombre: 'Dragón',
+        categoria: 'Japonés',
+        descripcion: 'Boceto inicial',
+        imagen: '',
+        estado: 'activo',
+      },
+    ]));
+
+    const updatedDesign = updateDesign('diseno-001', {
+      nombre: 'Dragón japonés',
+      descripcion: 'Diseño para brazo completo',
+    });
+
+    expect(updatedDesign).toMatchObject({
+      id: 'diseno-001',
+      clienteId: 'cliente-001',
+      nombre: 'Dragón japonés',
+      descripcion: 'Diseño para brazo completo',
+      estado: 'activo',
+    });
   });
 });

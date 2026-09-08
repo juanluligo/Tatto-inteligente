@@ -1,14 +1,21 @@
 import { useState } from 'react';
 import CreateDesignForm from './CreateDesignForm.jsx';
 import DesignsList from './DesignsList.jsx';
+import EditDesignModal from './EditDesignModal.jsx';
 import { useClients } from '../hooks/useClients.js';
 
 export default function DesignsStudioSection() {
   const clients = useClients();
   const [selectedClientId, setSelectedClientId] = useState(clients[0]?.id || '');
   const [refreshKey, setRefreshKey] = useState(0);
+  const [editingDesign, setEditingDesign] = useState(null);
 
   function handleDesignCreated() {
+    setRefreshKey((current) => current + 1);
+  }
+
+  function handleDesignUpdated() {
+    setEditingDesign(null);
     setRefreshKey((current) => current + 1);
   }
 
@@ -37,7 +44,15 @@ export default function DesignsStudioSection() {
       <DesignsList
         key={`${selectedClientId}-${refreshKey}`}
         clientId={selectedClientId}
+        onEdit={setEditingDesign}
       />
+      {editingDesign && (
+        <EditDesignModal
+          design={editingDesign}
+          onClose={() => setEditingDesign(null)}
+          onUpdated={handleDesignUpdated}
+        />
+      )}
     </div>
   );
 }
