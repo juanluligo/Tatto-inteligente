@@ -1,6 +1,11 @@
+import menuBackground from '../assets/CapturasParaTatto/Captura de pantalla 2026-09-08 012545.png';
+
 export default function AppHeader({ onScheduleClick }) {
   return (
-    <header className="site-header">
+    <header
+      className="site-header"
+      style={{ '--menu-background': `url(${menuBackground})` }}
+    >
       <a className="brand" href="/" aria-label="TattooStudio inicio">
         <span className="brand-mark">TS</span>
         <span>TattooStudio</span>
