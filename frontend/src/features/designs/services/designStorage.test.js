@@ -3,6 +3,7 @@ import {
   createDesign,
   getClients,
   getDesignsByClient,
+  deleteDesign,
   updateDesign,
 } from './designStorage.js';
 
@@ -73,5 +74,23 @@ describe('design storage', () => {
       descripcion: 'Diseño para brazo completo',
       estado: 'activo',
     });
+  });
+
+  it('deletes only the design with the requested id', () => {
+    localStorage.setItem('disenos', JSON.stringify([
+      { id: 'diseno-001', clienteId: 'cliente-001', nombre: 'Dragón' },
+      { id: 'diseno-002', clienteId: 'cliente-001', nombre: 'Rosa' },
+    ]));
+
+    const deletedDesign = deleteDesign('diseno-001');
+
+    expect(deletedDesign).toEqual({
+      id: 'diseno-001',
+      clienteId: 'cliente-001',
+      nombre: 'Dragón',
+    });
+    expect(JSON.parse(localStorage.getItem('disenos'))).toEqual([
+      { id: 'diseno-002', clienteId: 'cliente-001', nombre: 'Rosa' },
+    ]);
   });
 });

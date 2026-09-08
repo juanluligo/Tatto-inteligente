@@ -57,3 +57,15 @@ export function updateDesign(id, changes) {
   localStorage.setItem(DESIGNS_KEY, JSON.stringify(updatedDesigns));
   return updatedDesign;
 }
+
+export function deleteDesign(id) {
+  const designs = read(DESIGNS_KEY, []);
+  const deletedDesign = designs.find((design) => design.id === id);
+
+  if (!deletedDesign) return null;
+
+  const remainingDesigns = designs.filter((design) => design.id !== id);
+  localStorage.setItem(DESIGNS_KEY, JSON.stringify(remainingDesigns));
+
+  return deletedDesign;
+}

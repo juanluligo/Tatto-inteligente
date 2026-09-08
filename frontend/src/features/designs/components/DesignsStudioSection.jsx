@@ -3,6 +3,7 @@ import CreateDesignForm from './CreateDesignForm.jsx';
 import DesignsList from './DesignsList.jsx';
 import EditDesignModal from './EditDesignModal.jsx';
 import { useClients } from '../hooks/useClients.js';
+import { deleteDesign } from '../services/designStorage.js';
 
 export default function DesignsStudioSection() {
   const clients = useClients();
@@ -16,6 +17,17 @@ export default function DesignsStudioSection() {
 
   function handleDesignUpdated() {
     setEditingDesign(null);
+    setRefreshKey((current) => current + 1);
+  }
+
+  function handleDesignDelete(design) {
+    const confirmed = window.confirm(
+      `¿Seguro que quieres eliminar el diseño “${design.nombre}”?`,
+    );
+
+    if (!confirmed) return;
+
+    deleteDesign(design.id);
     setRefreshKey((current) => current + 1);
   }
 
@@ -45,6 +57,7 @@ export default function DesignsStudioSection() {
         key={`${selectedClientId}-${refreshKey}`}
         clientId={selectedClientId}
         onEdit={setEditingDesign}
+        onDelete={handleDesignDelete}
       />
       {editingDesign && (
         <EditDesignModal
