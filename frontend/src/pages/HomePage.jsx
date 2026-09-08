@@ -1,9 +1,10 @@
 import { STUDIO_NAME } from '../constants/app.js';
+import CreateDesignForm from '../features/designs/components/CreateDesignForm.jsx';
 
 export default function HomePage() {
   return (
     <>
-      <section className="hero" id="estudio">
+      <section className="hero" id="inicio">
         <div className="hero-copy">
           <p className="eyebrow">Estudio privado · Bogotá</p>
           <h1>Historias que se llevan en la piel.</h1>
@@ -18,6 +19,9 @@ export default function HomePage() {
           <div className="ink-flower">✳</div>
           <span className="art-note">SINCE<br />2025</span>
         </div>
+      </section>
+      <section className="studio-section" id="estudio">
+        <CreateDesignForm />
       </section>
       <section className="intro-grid" id="proceso">
         <p className="section-number">01 / 03</p>
