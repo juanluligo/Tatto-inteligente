@@ -1,0 +1,46 @@
+name: Verificación de calidad
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+  pull_request:
+    branches:
+      - develop
+      - main
+
+jobs:
+  calidad:
+    name: Verificar proyecto
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar frontend
+        working-directory: frontend
+        run: npm ci
+
+      - name: Verificar frontend
+        working-directory: frontend
+        run: |
+          npm run lint
+          npm run test
+          npm run build
+
+      - name: Instalar backend
+        working-directory: backend
+        run: npm ci
+
+      - name: Verificar backend
+        working-directory: backend
+        run: |
+          npm run lint
+          npm run test
