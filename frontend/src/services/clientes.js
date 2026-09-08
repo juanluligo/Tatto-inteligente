@@ -6,20 +6,29 @@ function createValidationError(errors) {
   return error;
 }
 
-/** Simula la creación de un cliente en la API. */
-export async function crearCliente(datos, clientesExistentes = []) {
+function validateClientData(datos, clientesExistentes, currentClientId = null) {
   const nombre = datos.nombre.trim();
   const email = datos.email.trim().toLowerCase();
   const telefono = datos.telefono.trim();
   const errors = {};
+
   if (!nombre) errors.nombre = 'El nombre es obligatorio.';
   if (!email) errors.email = 'El correo electrónico es obligatorio.';
   else if (!emailPattern.test(email)) errors.email = 'Ingresa un correo electrónico válido.';
-  else if (clientesExistentes.some((cliente) => cliente.email.toLowerCase() === email)) {
+  else if (clientesExistentes.some((cliente) => (
+    cliente.id !== currentClientId && cliente.email.toLowerCase() === email
+  ))) {
     errors.email = 'Ya existe un cliente registrado con este correo.';
   }
   if (!telefono) errors.telefono = 'El teléfono es obligatorio.';
   if (Object.keys(errors).length > 0) throw createValidationError(errors);
+
+  return { nombre, email, telefono };
+}
+
+/** Simula la creación de un cliente en la API. */
+export async function crearCliente(datos, clientesExistentes = []) {
+  const { nombre, email, telefono } = validateClientData(datos, clientesExistentes);
   await Promise.resolve();
   return {
     id: crypto.randomUUID(),
@@ -29,6 +38,24 @@ export async function crearCliente(datos, clientesExistentes = []) {
     fechaNacimiento: datos.fechaNacimiento || null,
     fechaRegistro: new Date().toISOString(),
     estado: true,
+  };
+}
+
+/** Simula la actualización de un cliente en la API. */
+export async function actualizarCliente(id, datos, clientesExistentes = []) {
+  const existingClient = clientesExistentes.find((cliente) => cliente.id === id);
+  if (!existingClient) throw new Error('Cliente no encontrado.');
+
+  const { nombre, email, telefono } = validateClientData(datos, clientesExistentes, id);
+  await Promise.resolve();
+
+  return {
+    ...existingClient,
+    nombre,
+    email,
+    telefono,
+    fechaNacimiento: datos.fechaNacimiento || null,
+    estado: Boolean(datos.estado),
   };
 }
 

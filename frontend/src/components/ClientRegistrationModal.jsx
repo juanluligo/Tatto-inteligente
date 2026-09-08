@@ -9,6 +9,7 @@ export default function ClientRegistrationModal({
   onCreate,
   onGetClient,
   onListClients,
+  onUpdateClient,
 }) {
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState({});
@@ -77,7 +78,11 @@ export default function ClientRegistrationModal({
           </button>
         </div>
         {activeView === 'clientes' && (
-          <ClientListPanel onGetClient={onGetClient} onListClients={onListClients} />
+          <ClientListPanel
+            onGetClient={onGetClient}
+            onListClients={onListClients}
+            onUpdateClient={onUpdateClient}
+          />
         )}
         {activeView === 'registro' && <>
           <p className="eyebrow">Agenda una cita</p>

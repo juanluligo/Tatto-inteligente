@@ -1,16 +1,19 @@
 import { useEffect, useMemo, useState } from 'react';
+import ClientEditForm from './ClientEditForm.jsx';
 
 function formatDate(value, options) {
   if (!value) return 'No registrada';
   return new Intl.DateTimeFormat('es-CO', options).format(new Date(value));
 }
 
-export default function ClientListPanel({ onGetClient, onListClients }) {
+export default function ClientListPanel({ onGetClient, onListClients, onUpdateClient }) {
   const [clientes, setClientes] = useState([]);
   const [search, setSearch] = useState('');
   const [selectedClient, setSelectedClient] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [success, setSuccess] = useState('');
 
   useEffect(() => {
     let isCurrent = true;
@@ -50,17 +53,33 @@ export default function ClientListPanel({ onGetClient, onListClients }) {
       const client = await onGetClient(id);
       if (!client) throw new Error('Cliente no encontrado');
       setSelectedClient(client);
+      setSuccess('');
     } catch {
       setError('No fue posible cargar el detalle del cliente.');
     }
   }
 
+  async function handleUpdateClient(datos) {
+    const updatedClient = await onUpdateClient(selectedClient.id, datos);
+    setSelectedClient(updatedClient);
+    setClientes((current) => current.map((client) => (
+      client.id === updatedClient.id ? updatedClient : client
+    )));
+    setIsEditing(false);
+    setSuccess('Cliente actualizado correctamente.');
+  }
+
   if (selectedClient) {
     return (
       <section className="client-panel" aria-labelledby="client-detail-title">
-        <button className="back-button" type="button" onClick={() => setSelectedClient(null)}>
-          ← Volver a clientes
-        </button>
+        {!isEditing && <button className="back-button" type="button" onClick={() => setSelectedClient(null)}>← Volver a clientes</button>}
+        {isEditing && <button className="back-button" type="button" onClick={() => setIsEditing(false)}>← Cancelar edición</button>}
+        {isEditing && <>
+          <p className="eyebrow">Editar cliente</p>
+          <h2 id="client-detail-title">Actualiza sus datos.</h2>
+          <ClientEditForm client={selectedClient} onCancel={() => setIsEditing(false)} onSave={handleUpdateClient} />
+        </>}
+        {!isEditing && <>
         <p className="eyebrow">Detalle de cliente</p>
         <h2 id="client-detail-title">{selectedClient.nombre}</h2>
         <span className={`status-badge ${selectedClient.estado ? 'status-active' : 'status-inactive'}`}>
@@ -83,11 +102,10 @@ export default function ClientListPanel({ onGetClient, onListClients }) {
             <dt>Fecha de registro</dt>
             <dd>{formatDate(selectedClient.fechaRegistro, { dateStyle: 'long', timeStyle: 'short' })}</dd>
           </div>
-          <div>
-            <dt>Identificador</dt>
-            <dd className="client-id">{selectedClient.id}</dd>
-          </div>
         </dl>
+        {success && <p className="form-success" role="status">{success}</p>}
+        <button className="primary-button edit-button" type="button" onClick={() => setIsEditing(true)}>Editar cliente <span>→</span></button>
+        </>}
       </section>
     );
   }
