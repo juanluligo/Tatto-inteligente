@@ -2,7 +2,7 @@ import { useState } from 'react';
 import ClientRegistrationModal from './components/ClientRegistrationModal.jsx';
 import AppLayout from './layouts/AppLayout.jsx';
 import HomePage from './pages/HomePage.jsx';
-import { crearCliente } from './services/clientes.js';
+import { crearCliente, listarClientes, obtenerClientePorId } from './services/clientes.js';
 
 export default function App() {
   const [clientes, setClientes] = useState([]);
@@ -14,6 +14,14 @@ export default function App() {
     return cliente;
   }
 
+  async function handleListClients() {
+    return listarClientes(clientes);
+  }
+
+  async function handleGetClient(id) {
+    return obtenerClientePorId(id, clientes);
+  }
+
   return (
     <AppLayout onScheduleClick={() => setIsRegistrationOpen(true)}>
       <HomePage />
@@ -21,6 +29,8 @@ export default function App() {
         isOpen={isRegistrationOpen}
         onClose={() => setIsRegistrationOpen(false)}
         onCreate={handleCreateClient}
+        onGetClient={handleGetClient}
+        onListClients={handleListClients}
       />
     </AppLayout>
   );

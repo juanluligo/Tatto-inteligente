@@ -31,3 +31,15 @@ export async function crearCliente(datos, clientesExistentes = []) {
     estado: true,
   };
 }
+
+/** Simula la consulta de clientes en la API. */
+export async function listarClientes(clientes = []) {
+  await Promise.resolve();
+  return [...clientes];
+}
+
+/** Simula la consulta de un cliente por id en la API. */
+export async function obtenerClientePorId(id, clientes = []) {
+  await Promise.resolve();
+  return clientes.find((cliente) => cliente.id === id) || null;
+}
