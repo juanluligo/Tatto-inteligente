@@ -1,4 +1,4 @@
-export default function AppHeader() {
+export default function AppHeader({ onScheduleClick }) {
   return (
     <header className="site-header">
       <a className="brand" href="/" aria-label="TattooStudio inicio">
@@ -8,7 +8,7 @@ export default function AppHeader() {
       <nav aria-label="Navegación principal">
         <a href="#estudio">El estudio</a>
         <a href="#proceso">Proceso cliente</a>
-        <a className="nav-cta" href="#contacto">Agenda una cita</a>
+        <button className="nav-cta" type="button" onClick={onScheduleClick}>Agenda una cita</button>
       </nav>
     </header>
   );
